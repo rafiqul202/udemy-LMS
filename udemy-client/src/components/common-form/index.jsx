@@ -8,7 +8,7 @@ const CommonForm = ({
   formControls = [],
   formData,
   setFormData,
-  isButtonFormDisabled=false,
+  isButtonFormDisabled = false,
 }) => {
   return (
     <form onSubmit={handleSubmit}>
@@ -18,7 +18,11 @@ const CommonForm = ({
         formData={formData}
         setFormData={setFormData}
       />
-      <Button disabled={isButtonFormDisabled} type="submit" className="w-full mt-5">
+      <Button
+        disabled={isButtonFormDisabled}
+        type="submit"
+        className="w-full mt-5 py-1.5"
+      >
         {buttonText ?? "Submit"}
       </Button>
     </form>

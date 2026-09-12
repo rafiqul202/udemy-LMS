@@ -1,3 +1,4 @@
+import AuthNavbar from "@/components/AuthNavbar";
 import CommonForm from "@/components/common-form";
 import {
   Card,
@@ -9,9 +10,9 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { signInFormControls, signUpFormControls } from "@/config";
 import { AuthContext } from "@/context/auth-context";
-import { GraduationCapIcon } from "lucide-react";
+// import { GraduationCapIcon } from "lucide-react";
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 const AuthPage = () => {
   const [activeTab, setActiveTab] = useState("signin");
@@ -20,11 +21,13 @@ const AuthPage = () => {
     setSignInFormData,
     signUpFormData,
     setSignUpFormData,
+    handleRegisterUser,
+    handleLoginUser,
   } = useContext(AuthContext);
   const handleTabChange = (value) => {
     setActiveTab(value);
   };
-  console.log("signUpform data value", signUpFormData);
+  console.log("signInform data value", signInFormData);
   const checkIfSignInformValid = () => {
     return signInFormData.userEmail !== "" && signInFormData.password !== "";
   };
@@ -36,15 +39,10 @@ const AuthPage = () => {
     );
   };
   return (
-    <div className="flex flex-col pt-4">
-      <header className="flex items-center border-b">
-        <Link to={"/"} className="flex items-center justify-center">
-          <GraduationCapIcon className="h-10 w-10 font-semibold" />
-          <span className="px-1">|</span>
-          <span className="text-gray-600 font-bold text-xl">Learn</span>
-        </Link>
-      </header>
-      <div className="flex items-center justify-center min-h-screen w-full mx-auto bg-background">
+    <div className="flex flex-col w-full h-full">
+      <AuthNavbar />
+
+      <div className="flex items-center justify-center min-h-svh w-full mx-auto bg-background">
         <Tabs
           defaultValue="signin"
           value={activeTab}
@@ -66,6 +64,7 @@ const AuthPage = () => {
                 </CardDescription>
                 <CardContent className="space-y-2">
                   <CommonForm
+                    handleSubmit={handleLoginUser}
                     formControls={signInFormControls}
                     buttonText={"Sign-In"}
                     formData={signInFormData}
@@ -87,6 +86,7 @@ const AuthPage = () => {
                 </CardDescription>
                 <CardContent className="space-y-2">
                   <CommonForm
+                    handleSubmit={handleRegisterUser}
                     formControls={signUpFormControls}
                     buttonText={"Sign-Up"}
                     formData={signUpFormData}
