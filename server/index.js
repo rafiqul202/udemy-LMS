@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./database/dbConnection.js";
 import authRoute from "./routes/auth-routes/index.js";
+import mediaRoute from "./routes/instructor-routes/media-routes.js";
 const app = express();
 const port = process.env.PORT ?? 5000;
 app.use(
@@ -16,6 +17,7 @@ app.use(express.json());
 
 // routes configuration .
 app.use("/auth", authRoute);
+app.use("/media",mediaRoute)
 
 app.use((error, req, res, next) => {
   console.log(error.stack);
