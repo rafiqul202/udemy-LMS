@@ -12,7 +12,7 @@ import { Textarea } from "../ui/textarea";
 function FormControls({ formControls = [], formData, setFormData }) {
   function renderComponentByType(getControlItem) {
     let element = null;
-    const CurrentControlItemValue = formData[getControlItem.name] || "";
+    const CurrentControlItemValue = formData[getControlItem.name] ?? "";
     switch (getControlItem.componentType) {
       case "input":
         element = (
@@ -64,7 +64,7 @@ function FormControls({ formControls = [], formData, setFormData }) {
             id={getControlItem.name}
             name={getControlItem.name}
             placeholder={getControlItem.placeholder}
-            value={value}
+            value={CurrentControlItemValue}
             onChange={(event) =>
               setFormData({
                 ...formData,
@@ -98,8 +98,8 @@ function FormControls({ formControls = [], formData, setFormData }) {
   }
   return (
     <div className="flex flex-col gap-3">
-      {formControls.map((controlItem) => (
-        <div key={controlItem.name}>
+      {formControls?.map((controlItem) => (
+        <div key={controlItem?.name}>
           <Label htmlFor={controlItem.name} className="mb-2">
             {controlItem.label}
           </Label>
