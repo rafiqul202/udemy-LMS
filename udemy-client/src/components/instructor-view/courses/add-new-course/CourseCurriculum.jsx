@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { courseCurriculumInitialFormData } from "@/config";
 import { InstructorContext } from "@/context/instructor-context";
 import { mediaUploadService } from "@/services";
 import { PlusCircleIcon } from "lucide-react";
@@ -19,14 +20,14 @@ const CourseCurriculum = () => {
     setMediaUploadProgressPercentage,
   } = useContext(InstructorContext);
 
-  const handleAddNewLecture = () => {
+  function handleAddNewLecture() {
     setCourseCurriculumFormData([
       ...courseCurriculumFormData,
       {
-        ...courseCurriculumFormData[0],
+        ...courseCurriculumInitialFormData[0],
       },
     ]);
-  };
+  }
 
   const handleCourseTitleChange = (event, currentIndex) => {
     let copyCourseCurriculumFormData = [...courseCurriculumFormData];
