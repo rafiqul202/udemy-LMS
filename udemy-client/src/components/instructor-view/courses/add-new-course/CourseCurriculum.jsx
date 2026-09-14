@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import VideoPlayer from "@/components/video-player";
 import { courseCurriculumInitialFormData } from "@/config";
 import { InstructorContext } from "@/context/instructor-context";
-import { mediaUploadService } from "@/services";
-import { PlusCircleIcon } from "lucide-react";
+import { mediaDeleteService, mediaUploadService } from "@/services";
+import { CircleX, PlusCircleIcon, Replace } from "lucide-react";
 import React, { useContext } from "react";
 
 const CourseCurriculum = () => {
@@ -75,21 +76,40 @@ const CourseCurriculum = () => {
       }
     }
   }
-  console.log("courseCurriculumFormData all details", courseCurriculumFormData);
+
+  const handleReplaceVideo = async(currentIndex) => {
+    let cpyCourseCurriculumFormData = [...courseCurriculumFormData];
+    const getCurrentVidePublicId =
+      cpyCourseCurriculumFormData[currentIndex].public_id;
+    const deleteCurrentMediaResponse = await mediaDeleteService(getCurrentVidePublicId);
+    if (deleteCurrentMediaResponse.success) {
+      cpyCourseCurriculumFormData[currentIndex] = {
+        ...cpyCourseCurriculumFormData[currentIndex],
+        videoUrl: "",
+        public_id:""
+      }
+      setCourseCurriculumFormData(cpyCourseCurriculumFormData)
+ }
+  }
+  function isCourseCurriculumFormDataValid() {
+    return courseCurriculumFormData.every(item => {
+      return item && typeof item === "object" && item.title.trim() !== "" && item.videoUrl.trim() !== ""
+    })
+  }
   return (
     <Card>
       <CardHeader>
         <CardTitle>Create Course Curriculum</CardTitle>
       </CardHeader>
       <CardContent>
-        <Button onClick={handleAddNewLecture}>
+        <Button onClick={handleAddNewLecture} disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgress}>
           {" "}
           <PlusCircleIcon /> Add Lecture{" "}
         </Button>
 
         <div className="space-y-3 mt-3 ">
           {courseCurriculumFormData.map((curriculumItem, index) => (
-            <div key={index} className="border border-gray-400 p-4 rounded-md">
+            <div key={index} className="p-5 rounded-md shadow-lg ">
               <div className="flex items-center space-x-5">
                 <h3 className="font-semibold">Lecture -{index + 1}</h3>
                 <Input
@@ -114,12 +134,34 @@ const CourseCurriculum = () => {
                 </div>
               </div>
               <div className="mt-3">
-                <Input
-                  type="file"
-                  accept="video/*"
-                  className="mb-4 w-2/12"
-                  onChange={(event) => handleSingleLectureUpload(event, index)}
-                />
+                {courseCurriculumFormData[index]?.videoUrl ? (
+                  <div className="flex gap-3">
+                    <VideoPlayer
+                      url={courseCurriculumFormData[index]?.videoUrl}
+                      width="700px"
+                      height="400px"
+                    />
+                    <Button size="icon" onClick={()=> handleReplaceVideo(index)}>
+                      <Replace />
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      className="rounded-full"
+                    >
+                      <CircleX />
+                    </Button>
+                  </div>
+                ) : (
+                  <Input
+                    type="file"
+                    accept="video/*"
+                    className="mb-4 w-2/12"
+                    onChange={(event) =>
+                      handleSingleLectureUpload(event, index)
+                    }
+                  />
+                )}
               </div>
               {mediaUploadProgress && (
                 <MediaProgressBar

@@ -16,12 +16,19 @@ export async function checkAuthService() {
   return data;
 }
 
-export async function mediaUploadService(formData,onProgressCallback) {
+export async function mediaUploadService(formData, onProgressCallback) {
   const { data } = await axiosInstance.post(`/media/upload`, formData, {
-    onUploadProgress: (progressEvent => {
-      const progressCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+    onUploadProgress: (progressEvent) => {
+      const progressCompleted = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total
+      );
       onProgressCallback(progressCompleted);
-    })
+    },
   });
+  return data;
+}
+
+export async function mediaDeleteService(publicId) {
+  const { data } = await axiosInstance.delete(`media/delete/${publicId}`);
   return data;
 }
