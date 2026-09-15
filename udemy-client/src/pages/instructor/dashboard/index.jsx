@@ -1,35 +1,53 @@
+import axiosInstance from "@/api/axiosInstanse";
 import InstructorCourses from "@/components/instructor-view/courses";
 import InstructorDashBoardView from "@/components/instructor-view/dashboard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { AuthContext } from "@/context/auth-context";
+import { InstructorContext } from "@/context/instructor-context";
+import { fetchInstructorCourseListServices } from "@/services";
 import { BarChart, BookCheck, LogOut } from "lucide-react";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
-const menuItems = [
-  {
-    icon: BarChart,
-    label: "Dashboard",
-    value: "dashboard",
-    component: <InstructorDashBoardView />,
-  },
-  {
-    icon: BookCheck,
-    label: "Courses",
-    value: "course",
-    component: <InstructorCourses />,
-  },
-  {
-    icon: LogOut,
-    label: "Log-out",
-    value: "logout",
-    component: null,
-  },
-];
 
 const InstructorDashBoardPage = () => {
   const { resetCredentials } = useContext(AuthContext);
+  const { instructorCourseList, setInstructorCourseList } = useContext(InstructorContext);
   const [activeTabs, setActiveTabs] = useState("dashboard");
+
+  const menuItems = [
+    {
+      icon: BarChart,
+      label: "Dashboard",
+      value: "dashboard",
+      component: <InstructorDashBoardView />,
+    },
+    {
+      icon: BookCheck,
+      label: "Courses",
+      value: "course",
+      component: <InstructorCourses listOfCourses={instructorCourseList} />,
+    },
+    {
+      icon: LogOut,
+      label: "Log-out",
+      value: "logout",
+      component: null,
+    },
+  ];
+  
+
+
+  const fetAllCourses = async () => {
+    const response = await fetchInstructorCourseListServices();
+    if (response.success) {
+      setInstructorCourseList(response?.data)
+    }
+
+}
+  useEffect(() => {
+    fetAllCourses();
+  }) 
   const handleLogOut = () => {
     resetCredentials();
     sessionStorage.clear();

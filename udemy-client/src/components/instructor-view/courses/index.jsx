@@ -12,7 +12,7 @@ import { Delete, Edit, PlusCircle } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const InstructorCourses = () => {
+const InstructorCourses = ({ listOfCourses }) => {
   const navigate = useNavigate();
   return (
     <Card>
@@ -21,7 +21,7 @@ const InstructorCourses = () => {
         <Button
           variant="icon"
           className="border-2 border-gray-300 p-4 cursor-pointer"
-          onClick={()=> navigate("/instructor/create-new-course")}
+          onClick={() => navigate("/instructor/create-new-course")}
         >
           {" "}
           <PlusCircle /> <span>Create Course</span>
@@ -39,29 +39,35 @@ const InstructorCourses = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">
-                  Reactjs full course 2027
-                </TableCell>
-                <TableCell>100</TableCell>
-                <TableCell>$500.00</TableCell>
-                <TableCell className="text-right">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="cursor-pointer hover:bg-gray-200 mr-0.5"
-                  >
-                    <Edit />
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    className="cursor-pointer"
-                  >
-                    <Delete />
-                  </Button>
-                </TableCell>
-              </TableRow>
+              {listOfCourses && listOfCourses.length > 0 ? (
+                listOfCourses.map((course) => (
+                  <TableRow>
+                    <TableCell className="font-medium">
+                      {course.title}
+                    </TableCell>
+                    <TableCell>{course?.students?.length}</TableCell>
+                    <TableCell>${course?.pricing}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="cursor-pointer hover:bg-gray-200 mr-0.5"
+                      >
+                        <Edit />
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        className="cursor-pointer"
+                      >
+                        <Delete />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <p>No Course Available</p>
+              )}
             </TableBody>
           </Table>
         </div>
