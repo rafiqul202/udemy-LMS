@@ -9,10 +9,10 @@ import { fetchInstructorCourseListServices } from "@/services";
 import { BarChart, BookCheck, LogOut } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 
-
 const InstructorDashBoardPage = () => {
   const { resetCredentials } = useContext(AuthContext);
-  const { instructorCourseList, setInstructorCourseList } = useContext(InstructorContext);
+  const { instructorCourseList, setInstructorCourseList } =
+    useContext(InstructorContext);
   const [activeTabs, setActiveTabs] = useState("dashboard");
 
   const menuItems = [
@@ -35,19 +35,16 @@ const InstructorDashBoardPage = () => {
       component: null,
     },
   ];
-  
-
 
   const fetAllCourses = async () => {
     const response = await fetchInstructorCourseListServices();
     if (response.success) {
-      setInstructorCourseList(response?.data)
+      setInstructorCourseList(response?.data);
     }
-
-}
+  };
   useEffect(() => {
     fetAllCourses();
-  }) 
+  }, []);
   const handleLogOut = () => {
     resetCredentials();
     sessionStorage.clear();

@@ -44,11 +44,12 @@ export async function addNewCourseService(formData) {
 }
 
 export async function fetchInstructorCourseListDetailsServices(params) {
-  const {data} = await axiosInstance.get(`/instructor/course/details/${params}`)
+  const { data } = await axiosInstance.get(`/instructor/course/get/details/${params}`);
+  return data;
 }
 
 
 export async function updateInstructorCourseByIdService(params,formData) {
-  const { data } = await axiosInstance.put(`/instructor/course/updata/${params}`, formData);
-  return data;
+  const { data } = await axiosInstance.put(`/instructor/course/update/${params}`, formData);
+  return data
 }

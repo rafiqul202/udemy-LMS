@@ -8,11 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { InstructorContext } from "@/context/instructor-context";
 import { Delete, Edit, PlusCircle } from "lucide-react";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 const InstructorCourses = ({ listOfCourses }) => {
+  const { setCurrentEditedCourseId } =
+    useContext(InstructorContext);
   const navigate = useNavigate();
   return (
     <Card>
@@ -52,6 +55,10 @@ const InstructorCourses = ({ listOfCourses }) => {
                         variant="ghost"
                         size="icon"
                         className="cursor-pointer hover:bg-gray-200 mr-0.5"
+                        onClick={() => {
+                          setCurrentEditedCourseId(null)
+                          navigate(`/instructor/edit-course/${course._id}`);
+                        }}
                       >
                         <Edit />
                       </Button>

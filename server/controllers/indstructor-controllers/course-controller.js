@@ -16,33 +16,27 @@ export const addNewCourse = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "add new course something went wrong!",
-      });
+    res.status(500).json({
+      success: false,
+      message: "add new course something went wrong!",
+    });
   }
 };
 
 export const getAllCourses = async (req, res) => {
   try {
     const courseList = await Course.find({});
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "get all course list",
-        data: courseList,
-      });
+    res.status(200).json({
+      success: true,
+      message: "get all course list",
+      data: courseList,
+    });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "get all course something went wrong!",
-      });
+    res.status(500).json({
+      success: false,
+      message: "get all course something went wrong!",
+    });
   }
 };
 
@@ -53,21 +47,17 @@ export const getCourseDetailsById = async (req, res) => {
     if (!courseDetails) {
       res.status(404).json({ success: false, message: "course not found" });
     }
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "get single course details",
-        data: courseDetails,
-      });
+    res.status(200).json({
+      success: true,
+      message: "get single course details",
+      data: courseDetails,
+    });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "something went wrong getCourse details!",
-      });
+    res.status(500).json({
+      success: false,
+      message: "something went wrong getCourse details!",
+    });
   }
 };
 
@@ -76,7 +66,7 @@ export const updateCourseById = async (req, res) => {
     const { id } = req.params;
     const updateCourseData = req.body;
 
-    const updatedCourse = await Course.findOneAndUpdate(id, updateCourseData, {
+    const updatedCourse = await Course.findByIdAndUpdate(id, updateCourseData, {
       new: true,
     });
     if (!updatedCourse) {
@@ -85,20 +75,16 @@ export const updateCourseById = async (req, res) => {
         .json({ success: false, message: "course not fond update" });
     }
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "course updated successfully",
-        data: updatedCourse,
-      });
+    res.status(200).json({
+      success: true,
+      message: "course updated successfully",
+      data: updatedCourse,
+    });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "something went wrong update course by id!",
-      });
+    res.status(500).json({
+      success: false,
+      message: "something went wrong update course by id!",
+    });
   }
 };
