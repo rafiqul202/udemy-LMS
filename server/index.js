@@ -5,6 +5,7 @@ import connectDB from "./database/dbConnection.js";
 import authRoute from "./routes/auth-routes/index.js";
 import mediaRoute from "./routes/instructor-routes/media-routes.js";
 import instructorCourseRoutes from "./routes/instructor-routes/course-routes.js";
+import studentViewCourseRoutes from "./routes/student-routes/course-routes.js"
 const app = express();
 const port = process.env.PORT ?? 5000;
 app.use(
@@ -19,7 +20,8 @@ app.use(express.json());
 // routes configuration .
 app.use("/auth", authRoute);
 app.use("/media", mediaRoute);
-app.use("/instructor/course",instructorCourseRoutes)
+app.use("/instructor/course", instructorCourseRoutes)
+app.use("/student/course",studentViewCourseRoutes)
 
 app.use((error, req, res, next) => {
   console.log(error.stack);

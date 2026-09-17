@@ -27,6 +27,17 @@ export async function mediaUploadService(formData, onProgressCallback) {
   });
   return data;
 }
+export async function mediaBulkUploadService(formData, onProgressCallback) {
+  const { data } = await axiosInstance.post(`/media/bulk-upload`, formData, {
+    onUploadProgress: (progressEvent) => {
+      const progressCompleted = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total
+      );
+      onProgressCallback(progressCompleted);
+    },
+  });
+  return data;
+}
 
 export async function mediaDeleteService(publicId) {
   const { data } = await axiosInstance.delete(`media/delete/${publicId}`);
@@ -52,4 +63,14 @@ export async function fetchInstructorCourseListDetailsServices(params) {
 export async function updateInstructorCourseByIdService(params,formData) {
   const { data } = await axiosInstance.put(`/instructor/course/update/${params}`, formData);
   return data
+}
+
+export async function fetchStudentViewCourseListService(query) {
+  const { data } = await axiosInstance.get(`/student/course/get?${query}`);
+  return data;
+}
+
+export async function fetchStudentViewCourseDetailsService(courseId) {
+  const { data } = await axiosInstance.get(`/student/course/get/details/${courseId}`);
+  return data;
 }

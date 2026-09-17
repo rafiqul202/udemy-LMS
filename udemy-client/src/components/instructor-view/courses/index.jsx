@@ -7,6 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
+  TableCaption,
 } from "@/components/ui/table";
 import { InstructorContext } from "@/context/instructor-context";
 import { Delete, Edit, PlusCircle } from "lucide-react";
@@ -41,9 +42,9 @@ const InstructorCourses = ({ listOfCourses }) => {
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
               {listOfCourses && listOfCourses.length > 0 ? (
                 listOfCourses.map((course) => (
+                  <TableBody>
                   <TableRow>
                     <TableCell className="font-medium">
                       {course.title}
@@ -71,11 +72,11 @@ const InstructorCourses = ({ listOfCourses }) => {
                       </Button>
                     </TableCell>
                   </TableRow>
+            </TableBody>
                 ))
               ) : (
-                <p>No Course Available</p>
+                <TableCaption>No Course Available</TableCaption>
               )}
-            </TableBody>
           </Table>
         </div>
       </CardContent>
