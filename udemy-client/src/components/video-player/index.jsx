@@ -26,10 +26,17 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
   const playerContainerRef = useRef(null);
   const controlsTimeoutRef = useRef(null);
 
+  function handleProgress(state) {
+    console.log("progress state data", state);
+    if (!seeking) {
+      setPlayed(state.played);
+    }
+  }
+
   const handlePlayAndPause = () => {
     setPlaying(!playing);
   };
- 
+
   const handleRewind = () => {
     playerRef.current?.seekTo(playerRef?.current?.getCurrentTime() - 5);
   };
@@ -53,13 +60,14 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
   };
 
   const formateTime = (ms) => {
-    const totalSeconds = ms / 1000;
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = (totalSeconds % 60).toFixed(2);
-    setDurationTime(`${minutes} min ${seconds} sec`);
-    return `${minutes} minutes, ${seconds} seconds`;
+    let milliseconds = Math.floor((ms / 1000) % 1000);
+    let seconds = Math.floor((ms / 1000) % 60);
+    let minutes = Math.floor((ms / (1000 * 60)) % 60);
+    let hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+    setDurationTime(`${hours} hh ${minutes} sec ${seconds} mill`);
+    return `${hours} hh ${minutes} sec ${seconds} mill`;
   };
-  const handleFullScreen = useCallback(()=> {
+  const handleFullScreen = useCallback(() => {
     if (!isFullScreen) {
       if (playerContainerRef?.current?.requestFullscreen) {
         playerContainerRef?.current?.requestFullscreen();
@@ -69,22 +77,22 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
         document.exitFullscreen();
       }
     }
-  }, [isFullScreen])
+  }, [isFullScreen]);
 
   const handleMouseMove = () => {
     setShowControls(true);
-    clearTimeout(controlsTimeoutRef.current)
-    controlsTimeoutRef.current = setTimeout(()=>setShowControls(false),3000)
-  }
-  
+    clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 3000);
+  };
+
   useEffect(() => {
     const handelFullScreenChange = () => {
-      
-      setIsFullScreen(document.fullscreenElement)
-    }
+      setIsFullScreen(document.fullscreenElement);
+    };
     document.addEventListener("fullscreenchange", handelFullScreenChange);
-    return()=> document.removeEventListener("fullscreenchange",handelFullScreenChange)
-  },[])
+    return () =>
+      document.removeEventListener("fullscreenchange", handelFullScreenChange);
+  }, []);
   return (
     <div
       ref={playerContainerRef}
@@ -93,7 +101,7 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
       }`}
       style={{ width, height }}
       onMouseMove={handleMouseMove}
-      onMouseLeave={()=> setShowControls(false)}
+      onMouseLeave={() => setShowControls(false)}
     >
       <ReactPlayer
         src={url}
@@ -104,8 +112,8 @@ const VideoPlayer = ({ width = "100%", height = "100%", url }) => {
         playing={playing}
         volume={volume}
         muted={muted}
+        onProgress={handleProgress}
         onDurationChange={(duration) => formateTime(duration?.timeStamp)}
-      
         style={{ width: "100%", height: "auto", aspectRatio: "16/9" }}
       />
       {showControls && (

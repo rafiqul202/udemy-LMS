@@ -14,7 +14,7 @@ import { StudentContext } from "@/context/student-context";
 import { fetchStudentViewCourseListService } from "@/services";
 import { ArrowUpDownIcon } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 const createSearchParamsFilter = (filterArrayData) => {
   let queryParams = [];
   for (const [key, value] of Object.entries(filterArrayData)) {
@@ -26,6 +26,7 @@ const createSearchParamsFilter = (filterArrayData) => {
   return queryParams.join("&");
 };
 const StudentViewCoursesPage = () => {
+  const navigate = useNavigate();
   const { studentViewCoursesList, setStudentViewCourseList } =
     useContext(StudentContext);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -69,10 +70,13 @@ const StudentViewCoursesPage = () => {
       setFilters(JSON.parse(sessionStorage.getItem("filters")));
     }
   }, []);
-
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem("filters");
+    };
+  }, []);
   useEffect(() => {
     const buildQueryStringForFilter = createSearchParamsFilter(filters);
-
     setSearchParams(new URLSearchParams(buildQueryStringForFilter));
   }, [filters]);
   useEffect(() => {
@@ -81,10 +85,7 @@ const StudentViewCoursesPage = () => {
     }
   }, [filters, sort]);
   // console.log("student View course", studentViewCoursesList);
-  console.log(
-    "session Storage",
-    JSON.parse(sessionStorage.getItem("filters"))
-  );
+  console.log("session Storage", JSON.parse(sessionStorage.getItem("filters")));
   // filters checked;
 
   return (
@@ -150,12 +151,12 @@ const StudentViewCoursesPage = () => {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-            <span className="text-sm text-gray-500">10 Results</span>
+            <span className="text-sm text-gray-500">{studentViewCoursesList.length} Results</span>
           </div>
           <div className="space-y-4">
             {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
               studentViewCoursesList.map((courseList) => (
-                <Card key={courseList._id} className="cursor-pointer">
+                <Card key={courseList._id} onClick={() => navigate(`/course/details/${courseList._id}`)} className="cursor-pointer">
                   <CardContent className="flex gap-4 p-4">
                     <div className="w-48 h-35 shrink-0">
                       <img
